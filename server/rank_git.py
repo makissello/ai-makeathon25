@@ -5,7 +5,7 @@ import numpy as np
 import tiktoken
 import concurrent.futures
 import json
-#
+
 
 MODEL = 'gpt-4o-mini'
 API_KEY = load_key()
@@ -15,8 +15,9 @@ dictOfCandidates = {}
 dictOfCandidates[USER] = []
 dictOfCandidates_score = {}
 
-with open(JOBDESCRIPTION_PATH, 'rb') as f:
-    read
+with open('JobDescription.txt', 'r', encoding='utf-8') as file:
+    JOBDESCRIPTION_TEXT = file.read()
+
 
 MAX_TOKENS = 100000  # adjust based on your model (e.g., 4096 for GPT-3.5, etc.)
 
@@ -46,7 +47,6 @@ def process_file(file_path, prompt, job_description_path):
             prompt,
             model=MODEL,
             api_key=API_KEY,
-            pdf_path=job_description_path
         )
         tmpadd = file_path + response.strip() + "\n\n\n"
         print(tmpadd)
@@ -96,12 +96,12 @@ def candidate_git_repo_score(repo_url=None, job_description_path=None):
     """
     # print(repo_comments)
     response = call_model(
-                    prompt + repo_comments,
+                    "The following Text is the Job description, that should be considered: " + JOBDESCRIPTION_TEXT + "The following Text is the Prompt" + prompt + repo_comments,
                     model=MODEL,
                     api_key=API_KEY,
-                    pdf_path=job_description_path
-                )
 
+                    # pdf_path=job_description_path
+                )
     print(response.strip())
 
     lines = response.strip().split('\n', 1)
