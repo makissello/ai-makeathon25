@@ -4,11 +4,9 @@ from dotenv import load_dotenv
 from openai import OpenAI
 from applicant import *
 
-load_dotenv('/Users/victorracu/PycharmProjects/ai-makeathon25/project/.env')
+load_dotenv('/project/.env')
 
 CLIENT = OpenAI(api_key=os.getenv('OPENAI-KEY'))
-DESCRIPTION = "/Users/victorracu/PycharmProjects/ai-makeathon25/Applicant/JobDescription.pdf"
-APPLICANTS = "/Users/victorracu/PycharmProjects/ai-makeathon25/Applicant/pseudo_applicants"
 PROMPT = ("Compare these applicants based on the passed job description and give me a reasoned ranking. Also include "
           "a floating point (4sf) score between 0 and 10 that reflects the application. The "
           "output should feature: applicant_name, short_description, score, for all applicants.")
@@ -131,9 +129,6 @@ def rank_users(applicants, job_description, client=CLIENT):
         raise ValueError("❌ Could not find valid JSON in the output!")
 
 
-test_applicants = Applicant.get_applicants_from_dir(APPLICANTS)
-ranking_out = rank_users(test_applicants, DESCRIPTION)
-print(ranking_out)
 
 
 
