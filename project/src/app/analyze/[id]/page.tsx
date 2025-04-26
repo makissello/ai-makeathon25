@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
+import { JobData } from "../../../types/job";
 
 export default function AnalyzePage() {
-    const [jobData, setJobData] = useState(null);
+    const [jobData, setJobData] = useState<JobData | null>(null);
     const [loading, setLoading] = useState(true);
     const pathname = usePathname();
 
@@ -14,21 +15,38 @@ export default function AnalyzePage() {
 
     const id = pathname.split('/').pop(); // Extract job ID from the URL
 
+    if (!id) throw new Error('No id provided');
+
     useEffect(() => {
-        if (id) {
-            // Make an API request to the Next.js API route (new path /analyze/[id])
-            fetch(`/analyze/${id}`)
-                .then((response) => response.json())
-                .then((data) => {
-                    setJobData(data);
-                    setLoading(false);
-                })
-                .catch((error) => {
-                    console.error('Error fetching job data:', error);
-                    setLoading(false);
-                });
+        console.log("Job ID: ", id);  // Log the Job ID when the effect runs
+
+        // Make an API request to the Python server
+        fetch(`http://localhost:5001/job/${id}`)
+            .then((response) => {
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch data");
+                }
+
+                return response.json();
+            })
+            .then((data) => {
+                setJobData(data);
+                setLoading(false);
+            })
+            .catch((error) => {
+                console.error('Error fetching job data:', error);
+                setLoading(false);
+            });
+    }, [id]);
+
+
+    useEffect(() => {
+        if (jobData) {
+            console.log("Updated Job Data:", jobData);
         }
-    }, [id]); // Re-run the effect if the `id` changes
+    }, [jobData]);
+
 
     if (loading) {
         return <div>Loading...</div>;

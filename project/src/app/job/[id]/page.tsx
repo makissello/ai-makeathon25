@@ -1,29 +1,7 @@
 'use client'
 
 import { usePathname, useRouter } from 'next/navigation';
-
-// Sample job data (you would fetch this from an API or database in a real application)
-const jobData = {
-    1: {
-        title: 'Frontend Developer',
-        company: 'TechX Inc.',
-        location: 'Berlin, Germany',
-        description: 'Looking for a passionate frontend developer with React experience.',
-        datePosted: '2025-04-10',
-        applicationsReceived: 15, // Example number of applications
-        status: 'Open',
-    },
-    2: {
-        title: 'Backend Developer',
-        company: 'DevTech',
-        location: 'Munich, Germany',
-        description: 'Seeking a backend developer with Node.js experience.',
-        datePosted: '2025-04-12',
-        applicationsReceived: 8,
-        status: 'Open',
-    },
-    // Add other jobs here for testing purposes
-};
+import { jobData } from "../../../data/job";
 
 export default function JobDetails() {
     const pathname = usePathname(); // Access the current path
