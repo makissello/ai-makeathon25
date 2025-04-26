@@ -1,4 +1,5 @@
-import os
+import json
+import re
 from dotenv import load_dotenv
 from openai import OpenAI
 from applicant import *
@@ -9,11 +10,11 @@ CLIENT = OpenAI(api_key=os.getenv('OPENAI-KEY'))
 DESCRIPTION = "/Users/victorracu/PycharmProjects/ai-makeathon25/Applicant/JobDescription.pdf"
 APPLICANTS = "/Users/victorracu/PycharmProjects/ai-makeathon25/Applicant/pseudo_applicants"
 PROMPT = ("Compare these applicants based on the passed job description and give me a reasoned ranking. Also include "
-          "a score between 0 and 10 that reflects the application. The "
-          "output should feature: applicant_name, short_description, score, for all applicants")
+          "a floating point (4sf) score between 0 and 10 that reflects the application. The "
+          "output should feature: applicant_name, short_description, score, for all applicants.")
 
 
-def rank_user_CV(client, applicant, job_description_path):
+def __rank_user_CV(client, applicant, job_description_path):
     """
     Function evaluates and gives ranking to the CV based on a certain job description
     :param client: The model specified to be used in
@@ -105,32 +106,37 @@ def rank_users(applicants, job_description, client=CLIENT):
 
     # getting response generated based on input
 
-    json_response = client.responses.create(
+    ranking = client.responses.create(
         model="gpt-4o",
         input=[
             {
                 "role": "system",
-                "content": "You are a helpful assistant that only responds in JSON format."},
+                "content": "You are a helpful assistant that only responds in JSON format. Make sure that the String "
+                           "is valid to be parsed immediately"},
             {
                 "role": "user",
                 "content": model_input
             }
         ],
-        temperature=0.2
+        temperature=0.1
     )
 
-    return json_response.output_text
+    match = re.search(r'(\[.*\]|\{.*\})', ranking.output_text, re.DOTALL)
+
+    if match:
+        string = match.group(1)
+        dictionary = json.loads(string)
+        return dictionary
+    else:
+        raise ValueError("❌ Could not find valid JSON in the output!")
 
 
 test_applicants = Applicant.get_applicants_from_dir(APPLICANTS)
-
-for applicant in test_applicants:
-    print(applicant.to_string())
-
-ranking = rank_users(test_applicants, DESCRIPTION)
+ranking_out = rank_users(test_applicants, DESCRIPTION)
+print(ranking_out)
 
 
-print(ranking)
+
 
 
 
