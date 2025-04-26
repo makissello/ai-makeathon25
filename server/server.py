@@ -1,4 +1,8 @@
-from flask import Flask, jsonify
+import os
+from Applicant.ai_process import rank_users
+from Applicant.applicant import Applicant
+
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -47,6 +51,23 @@ def get_job(job_id):
     else:
         return jsonify({"message": "Job not found"}), 404
 
+@app.route("/Applicant/<job_id>", methods=["POST"])
+def get_processed_applicants():
+    """
+    for input JSON need path to applicants folder and path to job description PDF
+    returns JSON of applicants dictionaries ranked
+    """
+    data = request.json
+    folder_path = data.get('path')
+    job_desc_path = data.get('job_description')
+
+    if not folder_path or not os.path.isdir(folder_path):
+        return jsonify({'error': 'Invalid folder path'}), 400
+
+    applicants_list = Applicant.get_applicants_from_dir(folder_path)
+    applicants_ranked = rank_users(job_desc_path, applicants_list)
+
+    return jsonify({'applicants': applicants_ranked})
 
 if __name__ == "__main__":
     app.run(host="localhost", port=5001, debug=True)
