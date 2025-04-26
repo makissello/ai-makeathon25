@@ -69,7 +69,7 @@ def rank_users(applicants, job_description, client=CLIENT):
     :param client: the API key client for the function
     :param applicants: list containing all applicants
     :param job_description: path to a pdf of the job description
-    :return: a list of all applicants in a ranked order
+    :return: a list of dictionaries of all applicants
     """
     # process the files to be able to be used for comparison evaluation
 
