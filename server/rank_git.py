@@ -15,6 +15,9 @@ dictOfCandidates = {}
 dictOfCandidates[USER] = []
 dictOfCandidates_score = {}
 
+with open(JOBDESCRIPTION_PATH, 'rb') as f:
+    read
+
 MAX_TOKENS = 100000  # adjust based on your model (e.g., 4096 for GPT-3.5, etc.)
 
 BASE_PROMPT = (
@@ -149,8 +152,8 @@ print("dictOfCandidates", dictOfCandidates)
 print("dictOfCandidates_score", dictOfCandidates_score)
 
 with open("dictOfCandidates.json", "w", encoding='utf-8') as f:
-    json.dump(dictOfCandidates, f, indend=4, ensure_ascii=False)
+    json.dump(dictOfCandidates, f, ensure_ascii=False)
 
 with open("dictOfCandidates_score.json", "w", encoding='utf-8') as f:
-    json.dump(dictOfCandidates_score, f, indend=4, ensure_ascii=False)
+    json.dump(dictOfCandidates_score, f, ensure_ascii=False)
 
