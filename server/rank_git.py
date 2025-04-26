@@ -45,7 +45,7 @@ def candidate_git_repo_score(repo_url=None, job_description_path=None):
         # Estimate tokens
         total_tokens = estimate_tokens(prompt)
 
-        if total_tokens > MAX_TOKENS:
+        if total_tokens > MAX_TOKENS:#
             continue
 
         try:
