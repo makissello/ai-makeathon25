@@ -1,6 +1,7 @@
 import Link from 'next/link';
+import { JobData, JobListingProps } from "../types/job";
 
-export const JobListing = ({ job }: { job: { id: number, title: string; company: string; location: string; datePosted: string; description: string; status: string } }) => {
+export const JobListing = ({ job } : JobListingProps) => {
     return (
         <div className="bg-white shadow-md rounded-lg p-6">
             <Link href={`/job/${job.id}`} passHref>
