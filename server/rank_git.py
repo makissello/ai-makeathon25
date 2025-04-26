@@ -4,12 +4,16 @@ from key import load_key
 import numpy as np
 import tiktoken
 import concurrent.futures
+import json
 
 
 MODEL = 'gpt-4o-mini'
 API_KEY = load_key()
 USER = input("Enter the GitHub User: ").strip()
 JOBDESCRIPTION_PATH = input("Enter the path to the job description PDF file: ").strip()
+dictOfCandidates = {}
+dictOfCandidates[USER] = []
+dictOfCandidates_score = {}
 
 MAX_TOKENS = 100000  # adjust based on your model (e.g., 4096 for GPT-3.5, etc.)
 
@@ -66,21 +70,26 @@ def candidate_git_repo_score(repo_url=None, job_description_path=None):
     files = crawl_git_repo(repo_url)
 
 
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        futures = []
+        for file_path, content in files:
+            prompt = BASE_PROMPT + f"File: {file_path}\nContent:\n{content}\n\n"
+            if estimate_tokens(prompt) > MAX_TOKENS:
+                continue
+            futures.append(executor.submit(process_file, file_path, prompt, job_description_path))
 
-    for file_path, content in files:
-        prompt = BASE_PROMPT + f"File: {file_path}\nContent:\n{content}\n\n"
-        if estimate_tokens(prompt) > MAX_TOKENS:
-            continue
-        resp = process_file(file_path, prompt, job_description_path)
-        if resp is not None:
-            repo_comments += resp
+        for future in concurrent.futures.as_completed(futures):
+            resp = future.result()
+            if resp is not None:
+                repo_comments += resp
 
 
-
-    prompt = """All of the following infos, are the names of Files, and then their brief description.
+    prompt = """All of the following infos, are the names of Files, and then their brief description, in a Github repository. 
     Your task, is to rate the entire repository, on its own, but especially its relevance to the job description given to you.
     I am trying to decide wether i should hire  the person that created this repository, for the given job description. Are they the right fit?
-    Only give as answer an Number between 0 and 10.
+    ATTENTION! Your output will constitute of two parts. 
+    PART 1: A WHOLE Number between 0 and 10, evaluating the quality of the Repository, ONLY THE NUMBER, not a single character of text is allowed in this line.  
+    PART 2: After that, you will make a Newline. Then I want you to explain your answer, and give reasoning. 
     """
     # print(repo_comments)
     response = call_model(
@@ -89,7 +98,23 @@ def candidate_git_repo_score(repo_url=None, job_description_path=None):
                     api_key=API_KEY,
                     pdf_path=job_description_path
                 )
-    return int(response.strip())
+
+    print(response.strip())
+
+    lines = response.strip().split('\n', 1)
+    evaluation_number = int(lines[0].strip())
+    evaluation_text = lines[1].strip() if len(lines) > 1 else ""
+    print("Evaluation number is: ", evaluation_number)
+
+
+    dictOfCandidates[USER].append(
+        {
+            "link_to_repository": repo_url,
+            "score_of_repository": evaluation_number,
+            "evaluation_of_repository": evaluation_text,
+        },
+    )
+    return evaluation_number
 
 
 def candidate_git_score(user_url=None, job_description_path=None):
@@ -108,13 +133,24 @@ def candidate_git_score(user_url=None, job_description_path=None):
     top_repos = find_top_repos_by_job_desc(user_url, job_description_path, top_n=2)
 
     # Calculate scores for each top repository
-    scores = {}
+    scores = []
     for repo in top_repos:
         print(repo)
         score = candidate_git_repo_score(repo, job_description_path)
-        scores[repo] = score
-    print(top_repos, scores.values())
-    return np.mean(list(scores.values()))
+        scores.append(score)
 
-print("Candidate GitHub User Score:", candidate_git_score(USER, JOBDESCRIPTION_PATH))
+    print(top_repos, scores)
+
+    dictOfCandidates_score[USER] = float(np.mean(scores))
+    return None
+
+candidate_git_score(USER, JOBDESCRIPTION_PATH)
+print("dictOfCandidates", dictOfCandidates)
+print("dictOfCandidates_score", dictOfCandidates_score)
+
+with open("dictOfCandidates.json", "w", encoding='utf-8') as f:
+    json.dump(dictOfCandidates, f, indend=4, ensure_ascii=False)
+
+with open("dictOfCandidates_score.json", "w", encoding='utf-8') as f:
+    json.dump(dictOfCandidates_score, f, indend=4, ensure_ascii=False)
 
