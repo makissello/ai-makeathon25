@@ -13,9 +13,6 @@ load_dotenv('../project/.env')
 
 CLIENT = OpenAI(api_key=os.getenv('OPENAI-KEY'))
 
-
-
-
 app = Flask(__name__)
 CORS(app)
 
@@ -68,6 +65,7 @@ def get_processed_applicants(job_id):
     for input JSON need path to applicants folder and path to job description PDF
     returns JSON of applicants dictionaries ranked
     """
+    print("data received: ", request.json)
     data = request.json
     folder_path = data.get('path')
     job_desc_path = data.get('job_description')
@@ -76,7 +74,7 @@ def get_processed_applicants(job_id):
         return jsonify({'error': 'Invalid folder path'}), 400
 
     applicants_list = Applicant.get_applicants_from_dir(folder_path)
-    applicants_ranked = rank_users(job_description=job_desc_path, applicants=applicants_list, client=CLIENT)
+    applicants_ranked = rank_users(applicants=applicants_list, job_description=job_desc_path, client=CLIENT)
 
     return jsonify({'applicants': applicants_ranked})
 
