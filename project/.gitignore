@@ -44,4 +44,4 @@ next-env.d.ts
 /.next
 
 # ide stuff
-/.idea
+/.idea/
