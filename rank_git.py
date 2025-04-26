@@ -1,9 +1,9 @@
 from git_crawl import crawl_git_repo
 from llm import call_model
-from key import get_key
+from key import load_key
 
-MODEL = 'gpt-4'
-API_KEY = get_key()
+MODEL = 'gpt-4o-mini'
+API_KEY = load_key()
 REPO_URL = input("Enter the GitHub repository URL: ").strip()
 JOBDESCRIPTION_PATH = input("Enter the path to the job description PDF file: ").strip()
 
@@ -32,7 +32,7 @@ def candidate_git_score(repo_url=None, job_description_path=None):
         prompt += f"File: {file_path}\nContent: {content}...\n\n"
 
         # Call the LLM to rank the files
-        response = call_model(prompt, model=MODEL, api_key=API_KEY, job_description_path=job_description_path)
+        response = call_model(prompt, model=MODEL, api_key=API_KEY, pdf_path=job_description_path)
         
         file_score = int(response.strip())
         candidate_score += file_score

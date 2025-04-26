@@ -2,21 +2,20 @@ import openai
 from pathlib import Path
 from PyPDF2 import PdfReader
 
-def call_openai_model(prompt, model="gpt-4", api_key=None, pdf_path=None):
+def call_model(prompt, model="gpt-4o-mini", api_key=None, pdf_path=None):
     """
     Sends a prompt (optionally prefixed with PDF content) to the OpenAI API and returns the response.
 
     Args:
         prompt (str): The prompt or message to send to the model.
-        model (str): The model to use (default is "gpt-4").
+        model (str): The model to use (default is "gpt-4-turbo").
         api_key (str): Your OpenAI API key. If not set, assumes it's set globally.
         pdf_path (str or Path, optional): Path to a PDF file to include its text at the beginning.
 
     Returns:
         str: The model's response.
     """
-    if api_key:
-        openai.api_key = api_key
+    client = openai.OpenAI(api_key=api_key)  # New: create a Client object
 
     if pdf_path:
         try:
@@ -32,17 +31,15 @@ def call_openai_model(prompt, model="gpt-4", api_key=None, pdf_path=None):
             return None
 
     try:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model=model,
             messages=[
                 {"role": "user", "content": prompt}
             ],
             temperature=0.7,
             max_tokens=500,
-            n=1,
-            stop=None,
         )
-        return response['choices'][0]['message']['content'].strip()
+        return response.choices[0].message.content.strip()
     except Exception as e:
         print(f"Error calling OpenAI API: {e}")
         return None
