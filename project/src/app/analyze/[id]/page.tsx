@@ -6,10 +6,12 @@ import Link from 'next/link';
 import { JobData } from "../../../types/job";
 import { ApplicantCarousel } from '../../../components/ApplicantCarousel';
 import { DottedBackground } from '../../../components/DottedBackground';
+import { AnalyzeSkeleton } from '../../../components/AnalyzeSkeleton';
 
 export default function AnalyzePage() {
     const [jobData, setJobData] = useState<JobData | null>(null);
     const [loading, setLoading] = useState(true);
+    const [showContent, setShowContent] = useState(false);
     const pathname = usePathname();
 
     if (!pathname) {
@@ -34,6 +36,10 @@ export default function AnalyzePage() {
             .then((data) => {
                 setJobData(data);
                 setLoading(false);
+                // Add 2 second delay before showing content
+                setTimeout(() => {
+                    setShowContent(true);
+                }, 1000);
             })
             .catch((error) => {
                 console.error('Error fetching job data:', error);
@@ -41,8 +47,8 @@ export default function AnalyzePage() {
             });
     }, [id]);
 
-    if (loading) {
-        return <div>Loading...</div>;
+    if (loading || !showContent) {
+        return <AnalyzeSkeleton />;
     }
 
     if (!jobData) {
