@@ -1,12 +1,6 @@
 import json
 import re
-from dotenv import load_dotenv
-from openai import OpenAI
-from applicant import *
 
-load_dotenv('/project/.env')
-
-CLIENT = OpenAI(api_key=os.getenv('OPENAI-KEY'))
 PROMPT = ("Compare these applicants based on the passed job description and give me a reasoned ranking. Also include "
           "a floating point (4sf) score between 0 and 10 that reflects the application. The "
           "output should feature: applicant_name, short_description, score, for all applicants.")
@@ -63,7 +57,7 @@ def __rank_user_CV(client, applicant, job_description_path):
 
 
 
-def rank_users(applicants, job_description, client=CLIENT):
+def rank_users(applicants, job_description, client):
     """
     function orders applicants based on CV fitting to given job description
     :param client: the API key client for the function
@@ -73,6 +67,7 @@ def rank_users(applicants, job_description, client=CLIENT):
     """
     # process the files to be able to be used for comparison evaluation
 
+    print(job_description)
     job_description_file = client.files.create(
         file=open(job_description, "rb"),
         purpose="user_data"

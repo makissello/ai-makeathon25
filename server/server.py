@@ -1,9 +1,20 @@
 import os
-from Applicant.ai_process import rank_users
-from Applicant.applicant import Applicant
+
+from dotenv import load_dotenv
+from openai import OpenAI
+
+from utils.ai_process import rank_users
+from utils.applicant import Applicant
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+
+load_dotenv('../project/.env')
+
+CLIENT = OpenAI(api_key=os.getenv('OPENAI-KEY'))
+
+
+
 
 app = Flask(__name__)
 CORS(app)
@@ -52,7 +63,7 @@ def get_job(job_id):
         return jsonify({"message": "Job not found"}), 404
 
 @app.route("/Applicant/<job_id>", methods=["POST"])
-def get_processed_applicants():
+def get_processed_applicants(job_id):
     """
     for input JSON need path to applicants folder and path to job description PDF
     returns JSON of applicants dictionaries ranked
@@ -65,7 +76,7 @@ def get_processed_applicants():
         return jsonify({'error': 'Invalid folder path'}), 400
 
     applicants_list = Applicant.get_applicants_from_dir(folder_path)
-    applicants_ranked = rank_users(job_desc_path, applicants_list)
+    applicants_ranked = rank_users(job_description=job_desc_path, applicants=applicants_list, client=CLIENT)
 
     return jsonify({'applicants': applicants_ranked})
 
