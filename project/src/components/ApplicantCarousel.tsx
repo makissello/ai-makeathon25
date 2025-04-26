@@ -1,12 +1,5 @@
 import { useState } from 'react';
-
-interface Applicant {
-    id: string;
-    name: string;
-    email: string;
-    resume: string;
-    // Add more applicant fields as needed
-}
+import { Applicant } from '../types/applicant';
 
 interface ApplicantCarouselProps {
     applicants?: Applicant[]; // Make applicants optional
@@ -15,22 +8,19 @@ interface ApplicantCarouselProps {
 // Test data
 const TEST_APPLICANTS: Applicant[] = [
     {
-        id: '1',
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-        resume: 'Experienced software engineer with 5+ years of experience in web development. Specialized in React and TypeScript.'
+        applicant_name: 'John Doe',
+        score: 8.5,
+        short_description: 'Experienced software engineer with 5+ years of experience in web development. Specialized in React and TypeScript.'
     },
     {
-        id: '2',
-        name: 'Jane Smith',
-        email: 'jane.smith@example.com',
-        resume: 'Full-stack developer with expertise in modern web technologies. Strong background in UI/UX design and backend development.'
+        applicant_name: 'Jane Smith',
+        score: 7.8,
+        short_description: 'Full-stack developer with expertise in modern web technologies. Strong background in UI/UX design and backend development.'
     },
     {
-        id: '3',
-        name: 'Alex Johnson',
-        email: 'alex.johnson@example.com',
-        resume: 'Recent graduate with a passion for machine learning and data science. Completed several projects in Python and TensorFlow.'
+        applicant_name: 'Alex Johnson',
+        score: 6.2,
+        short_description: 'Recent graduate with a passion for machine learning and data science. Completed several projects in Python and TensorFlow.'
     }
 ];
 
@@ -84,22 +74,22 @@ export const ApplicantCarousel = ({ applicants = TEST_APPLICANTS }: ApplicantCar
                 <div className="relative w-full h-full">
                     {applicants.map((applicant, index) => (
                         <div
-                            key={applicant.id}
+                            key={applicant.applicant_name}
                             className={`absolute w-full transition-all duration-500 ${getSlideStyle(index)}`}
                         >
                             <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm p-8 hover:shadow-md transition-all duration-300 border border-gray-100 mx-4">
                                 <div className="flex flex-col items-center gap-6">
                                     <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center">
-                                        <span className="text-4xl text-gray-400">{applicant.name.charAt(0)}</span>
+                                        <span className="text-4xl text-gray-400">{applicant.applicant_name.charAt(0)}</span>
                                     </div>
                                     <div className="text-center">
-                                        <h3 className="text-2xl font-semibold text-gray-900 font-dm-mono">{applicant.name}</h3>
-                                        <p className="text-gray-600 font-dm-mono">{applicant.email}</p>
+                                        <h3 className="text-2xl font-semibold text-gray-900 font-dm-mono">{applicant.applicant_name}</h3>
+                                        <p className="text-gray-600 font-dm-mono">Score: {applicant.score}</p>
                                     </div>
                                     <div className="w-full">
-                                        <h4 className="text-lg font-semibold text-gray-900 mb-4 font-dm-mono">Resume</h4>
+                                        <h4 className="text-lg font-semibold text-gray-900 mb-4 font-dm-mono">Description</h4>
                                         <div className="bg-gray-50 rounded-lg p-4 font-dm-mono">
-                                            <p className="text-gray-700 whitespace-pre-wrap">{applicant.resume}</p>
+                                            <p className="text-gray-700 whitespace-pre-wrap">{applicant.short_description}</p>
                                         </div>
                                     </div>
                                 </div>
