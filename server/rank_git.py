@@ -36,10 +36,9 @@ def candidate_git_repo_score(repo_url=None, job_description_path=None):
         prompt = (
             "Provide a score from 1 to 10 for the content of the current file based on its relevance "
             "to the job description provided in the PDF file."
-            "Also provide a summary about the file and what are the most important skills used relevant to the job."
-            "Keep the summary short (maybe around 15-20 words)."
-            "Return format (in json):"
-            "{'summary': SUMMARY_OF_CANDIDATE, 'score': SCORE}\n\n"
+            "Provide a score from 1 to 10 for the content of the current file based on its relevance "
+            "to the job description provided in the PDF file. "
+            "Output only the score and nothing else.\n\n"
         )
         prompt += f"File: {file_path}\nContent:\n{content}\n\n"
 
