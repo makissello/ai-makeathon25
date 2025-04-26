@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { JobListing } from '../components/JobListing'
 import { JobDetails } from '../components/JobDetails'
 import { jobData } from "../data/job";
-import { AnimatedBackground } from 'animated-backgrounds';
 import { DottedBackground } from '../components/DottedBackground';
 
 export default function Home() {
