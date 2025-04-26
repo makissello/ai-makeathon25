@@ -42,7 +42,7 @@ def process_file(file_path, prompt, job_description_path):
     """
     Function to call the model and return the result for one file.
     """
-    try:
+    try:#
         response = call_model(
             prompt,
             model=MODEL,
