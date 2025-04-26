@@ -1,5 +1,6 @@
 import { JobData } from "../types/job";
-import ReactMarkdown from 'react-markdown';
+import { DisplayMarkdown } from './DisplayMarkdown';
+import { jobDescriptions } from "../data/jobDescriptions";
 
 interface JobDetailsProps {
     job: JobData;
@@ -7,6 +8,7 @@ interface JobDetailsProps {
 }
 
 export const JobDetails = ({ job, onBack }: JobDetailsProps) => {
+    const jobDescription = jobDescriptions.find(desc => desc.id === job.id);
     return (
         <div className="animate-fade-in">
             <div className="flex items-center gap-4 mb-6">
@@ -18,7 +20,7 @@ export const JobDetails = ({ job, onBack }: JobDetailsProps) => {
                         <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
                     </svg>
                 </button>
-                <h2 className="text-2xl font-semibold text-gray-900 font-dm-mono">Job Details</h2>
+                
             </div>
 
             <div className="space-y-6">
@@ -43,26 +45,7 @@ export const JobDetails = ({ job, onBack }: JobDetailsProps) => {
                         </span>
                     </div>
 
-                    <div className="prose max-w-none font-dm-mono">
-                        <ReactMarkdown
-                            components={{
-                                h1: ({node, ...props}) => <h1 className="text-2xl font-bold text-gray-900 mb-4" {...props} />,
-                                h2: ({node, ...props}) => <h2 className="text-xl font-bold text-gray-900 mb-3" {...props} />,
-                                h3: ({node, ...props}) => <h3 className="text-lg font-bold text-gray-900 mb-2" {...props} />,
-                                p: ({node, ...props}) => <p className="text-gray-600 mb-4" {...props} />,
-                                ul: ({node, ...props}) => <ul className="list-disc list-inside mb-4 text-gray-600" {...props} />,
-                                li: ({node, ...props}) => <li className="mb-1" {...props} />,
-                                strong: ({node, ...props}) => <strong className="font-semibold text-gray-900" {...props} />,
-                            }}
-                        >
-                            {job.description}
-                        </ReactMarkdown>
-                        
-                        <div className="mt-6 pt-6 border-t border-gray-100">
-                            <h4 className="text-lg font-semibold text-gray-900 mb-2">Posted Date</h4>
-                            <p className="text-gray-600">{new Date(job.datePosted).toLocaleDateString('en-US')}</p>
-                        </div>
-                    </div>
+                    <DisplayMarkdown content={jobDescription?.description || ''} />
                 </div>
             </div>
         </div>
