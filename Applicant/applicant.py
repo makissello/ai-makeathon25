@@ -5,6 +5,11 @@ from pathlib import Path
 class Applicant:
 
     def __init__(self, CV_path, github_username):
+        """
+        Constructor of applicant
+        :param CV_path: string to CV.pdf
+        :param github_username: string of GitHub profile
+        """
         self.__CV_path = CV_path
         self.__github_username = github_username
         self.__ranking_score = -1
@@ -75,8 +80,8 @@ class Applicant:
 
 
 
-root_directory = "/Users/victorracu/PycharmProjects/ai-makeathon25/Applicant/pseudo_applicants"
-applicants = Applicant.get_applicants_from_dir(root_directory)
-
-for applicant in applicants:
-    print(applicant.to_string())
+# root_directory = "/Users/victorracu/PycharmProjects/ai-makeathon25/Applicant/pseudo_applicants"
+# applicants = Applicant.get_applicants_from_dir(root_directory)
+#
+# for applicant in applicants:
+#     print(applicant.to_string())

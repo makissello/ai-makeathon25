@@ -1,1 +1,137 @@
+import os
+from dotenv import load_dotenv
 from openai import OpenAI
+from applicant import *
+
+load_dotenv('/Users/victorracu/PycharmProjects/ai-makeathon25/project/.env')
+
+CLIENT = OpenAI(api_key=os.getenv('OPENAI-KEY'))
+DESCRIPTION = "/Users/victorracu/PycharmProjects/ai-makeathon25/Applicant/JobDescription.pdf"
+APPLICANTS = "/Users/victorracu/PycharmProjects/ai-makeathon25/Applicant/pseudo_applicants"
+PROMPT = ("Compare these applicants based on the passed job description and give me a reasoned ranking. Also include "
+          "a score between 0 and 10 that reflects the application. The "
+          "output should feature: applicant_name, short_description, score, for all applicants")
+
+
+def rank_user_CV(client, applicant, job_description_path):
+    """
+    Function evaluates and gives ranking to the CV based on a certain job description
+    :param client: The model specified to be used in
+    :param applicant: Object that saves information of the job applicant
+    :param job_description_path: The description of the job in question in the form of a pdf
+    :return: a float value between 0 and 100 that gives a ranking of how well the applicant fits the job description
+    """
+    CV = client.files.create(
+        file=open(applicant.get_CV_path(), "rb"),
+        purpose="user_data"
+    )
+
+    job_description_file = client.files.create(
+        file=open(job_description_path, "rb"),
+        purpose="user_data"
+    )
+
+    response = client.responses.create(
+        model="gpt-4o-mini",
+        input=[
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "input_file",
+                        "file_id": CV.id,
+                    },
+                    {
+                        "type": "input_file",
+                        "file_id": job_description_file.id,
+                    },
+                    {
+                        "type": "input_text",
+                        "text": "Give me a numerical ranking (floating point value between 0 and 100) of this CV "
+                                "based on the following job description. The response should only consist of a "
+                                "singular number"
+                    },
+                ]
+            }
+        ]
+    )
+    try:
+        return float(response.output_text)
+    except ValueError:
+        return -1
+
+
+
+
+
+def rank_users(applicants, job_description, client=CLIENT):
+    """
+    function orders applicants based on CV fitting to given job description
+    :param client: the API key client for the function
+    :param applicants: list containing all applicants
+    :param job_description: path to a pdf of the job description
+    :return: a list of all applicants in a ranked order
+    """
+    # process the files to be able to be used for comparison evaluation
+
+    job_description_file = client.files.create(
+        file=open(job_description, "rb"),
+        purpose="user_data"
+    )
+
+    model_input = [
+                    {"type": "input_file",
+                     "file_id": job_description_file.id,
+                    },
+                    {
+                        "type": "input_text",
+                        "text": PROMPT
+                    }
+                ]
+
+    for applicant in applicants:
+        file = client.files.create(
+            file=open(applicant.get_CV_path(), "rb"),
+            purpose="user_data"
+        )
+
+        model_input.append(
+            {
+                "type":"input_file",
+                "file_id":file.id
+            }
+        )
+
+
+    # getting response generated based on input
+
+    json_response = client.responses.create(
+        model="gpt-4o",
+        input=[
+            {
+                "role": "system",
+                "content": "You are a helpful assistant that only responds in JSON format."},
+            {
+                "role": "user",
+                "content": model_input
+            }
+        ],
+        temperature=0.2
+    )
+
+    return json_response.output_text
+
+
+test_applicants = Applicant.get_applicants_from_dir(APPLICANTS)
+
+for applicant in test_applicants:
+    print(applicant.to_string())
+
+ranking = rank_users(test_applicants, DESCRIPTION)
+
+
+print(ranking)
+
+
+
+
