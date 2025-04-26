@@ -1,19 +1,35 @@
 import openai
+from pathlib import Path
+from PyPDF2 import PdfReader
 
-def call_model(prompt, model="gpt-4", api_key=None):
+def call_openai_model(prompt, model="gpt-4", api_key=None, pdf_path=None):
     """
-    Sends a prompt to the OpenAI API and returns the response.
+    Sends a prompt (optionally prefixed with PDF content) to the OpenAI API and returns the response.
 
     Args:
         prompt (str): The prompt or message to send to the model.
         model (str): The model to use (default is "gpt-4").
         api_key (str): Your OpenAI API key. If not set, assumes it's set globally.
+        pdf_path (str or Path, optional): Path to a PDF file to include its text at the beginning.
 
     Returns:
         str: The model's response.
     """
     if api_key:
         openai.api_key = api_key
+
+    if pdf_path:
+        try:
+            pdf_path = Path(pdf_path)
+            reader = PdfReader(str(pdf_path))
+            pdf_text = ""
+            for page in reader.pages:
+                pdf_text += page.extract_text() or ""
+            # Prepend PDF content to the prompt
+            prompt = f"Content from PDF:\n{pdf_text}\n\nUser prompt:\n{prompt}"
+        except Exception as e:
+            print(f"Error reading PDF: {e}")
+            return None
 
     try:
         response = openai.ChatCompletion.create(
