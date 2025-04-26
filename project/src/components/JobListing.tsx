@@ -3,10 +3,9 @@ import { JobData, JobListingProps } from "../types/job";
 
 export const JobListing = ({ job } : JobListingProps) => {
     return (
-        <div className="bg-white/80 backdrop-blur-sm border border-gray-100 rounded-xl p-6 transition-all duration-300 hover:shadow-lg hover:border-blue-100 group relative overflow-hidden">
+    <div className="bg-white/80 backdrop-blur-sm border border-gray-100 rounded-xl p-6 transition-all duration-300 hover:shadow-lg hover:border-blue-100 group relative overflow-hidden">
             {/* Decorative line */}
-            <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            
+            <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>            
             <Link href={`/job/${job.id}`} passHref className="block">
                 <div className="space-y-3">
                     <div className="flex justify-between items-start">
@@ -29,7 +28,7 @@ export const JobListing = ({ job } : JobListingProps) => {
                         <span className="text-gray-300">•</span>
                         <span>{job.location}</span>
                     </div>
-                    <p className="text-sm text-gray-400 font-dm-mono">Posted {new Date(job.datePosted).toLocaleDateString()}</p>
+                    <p className="text-sm text-gray-400 font-dm-mono">Posted {new Date(job.datePosted).toLocaleDateString('en-US')}</p>
                     <p className="text-gray-600 line-clamp-2 font-dm-mono">{job.description}</p>
                 </div>
             </Link>
