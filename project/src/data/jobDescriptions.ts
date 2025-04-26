@@ -1,10 +1,6 @@
-export const jobDescriptions = [
-    `# Frontend Developer
-**Open**  
-**TechX Inc.**  
-• Berlin, Germany  
-**Posted 4/10/2025**
-
+export const jobDescriptions = [{
+    id: 1,
+    description: `
 At TechX Inc., we are looking for a passionate and skilled **Frontend Developer** to join our dynamic team in Berlin. You will be responsible for building user interfaces that are not only visually appealing but also functional, responsive, and performant. As a Frontend Developer, you will work closely with UX/UI designers, product managers, and backend developers to create seamless web applications.
 
 **Key Responsibilities:**
@@ -28,13 +24,9 @@ At TechX Inc., we are looking for a passionate and skilled **Frontend Developer*
 - Experience with **TypeScript** and **Next.js**.
 - Knowledge of testing frameworks such as **Jest** or **Mocha**.
 - Experience with CSS preprocessors like **Sass** or **Less**.`
-,`
-# Backend Developer
-**Open**  
-**DevTech**  
-• Munich, Germany  
-**Posted 4/12/2025**
-
+},{
+    id: 2,
+    description: `
 DevTech is searching for a talented **Backend Developer** to join our growing engineering team in Munich. The ideal candidate will have hands-on experience with **Node.js** and a passion for building scalable, high-performance backend systems. As a Backend Developer, you will help us create and maintain the core architecture of our applications, working closely with other developers and stakeholders to deliver top-notch solutions.
 
 **Key Responsibilities:**
@@ -58,12 +50,9 @@ DevTech is searching for a talented **Backend Developer** to join our growing en
 - Knowledge of **GraphQL** and **Apollo**.
 - Experience with testing frameworks such as **Mocha** or **Jest**.
 - Familiarity with CI/CD pipelines and automated deployment processes.`
-,`# Product Designer
-**Open**  
-**CreativeTech**  
-• Hamburg, Germany  
-**Posted 4/15/2025**
-
+},{
+    id: 3,
+    description: `
 CreativeTech is looking for a highly creative **Product Designer** to join our innovative team in Hamburg. As a Product Designer, you will be responsible for crafting user-centric designs for our new and existing products. You will collaborate with cross-functional teams including developers, product managers, and other designers to ensure that the user experience is seamless, intuitive, and delightful.
 
 **Key Responsibilities:**
@@ -88,5 +77,5 @@ CreativeTech is looking for a highly creative **Product Designer** to join our i
 - Experience with **motion design** or **animations**.
 - Familiarity with design systems and component-based design.
 - Knowledge of front-end development or experience working closely with developers.
-`
+`}
 ]
