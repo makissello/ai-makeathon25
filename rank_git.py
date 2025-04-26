@@ -1,15 +1,24 @@
-from git_crawl import crawl_git_repo
+from git_crawl import crawl_git_repo, find_top_repos_by_job_desc
 from llm import call_model
 from key import load_key
+import numpy as np
+import tiktoken
 
 MODEL = 'gpt-4o-mini'
 API_KEY = load_key()
-REPO_URL = input("Enter the GitHub repository URL: ").strip()
+USER = input("Enter the GitHub User: ").strip()
 JOBDESCRIPTION_PATH = input("Enter the path to the job description PDF file: ").strip()
 
-def candidate_git_score(repo_url=None, job_description_path=None):
+MAX_TOKENS = 100000  # adjust based on your model (e.g., 4096 for GPT-3.5, etc.)
+
+def estimate_tokens(text, model_name=MODEL):
+    enc = tiktoken.encoding_for_model(model_name)
+    return len(enc.encode(text))
+
+def candidate_git_repo_score(repo_url=None, job_description_path=None):
     """
     Ranks files in a GitHub repository based on their relevance to the provided prompt.
+    Ensures the input stays within the max token limit.
     """
     if repo_url is None:
         print("No GitHub repository URL provided. Please provide a valid URL.")
@@ -18,25 +27,63 @@ def candidate_git_score(repo_url=None, job_description_path=None):
     if job_description_path is None:
         print("No job description provided. Please provide a path to a job description file.")
         return
-    # Crawl the GitHub repository
+
     files = crawl_git_repo(repo_url)
-
     candidate_score = 0
+    valid_file_count = 0
 
-    # Prepare the prompt for the LLM
     for file_path, content in files:
-        prompt = '''
-        Provide a score from 1 to 10 for the content of the current file based on its relevandce to the job description provided in the PDF file.
-        Output only the score and nothing else.\n\n
-        '''
-        prompt += f"File: {file_path}\nContent: {content}...\n\n"
+        prompt = (
+            "Provide a score from 1 to 10 for the content of the current file based on its relevance "
+            "to the job description provided in the PDF file. "
+            "Output only the score and nothing else.\n\n"
+        )
+        prompt += f"File: {file_path}\nContent:\n{content}\n\n"
 
-        # Call the LLM to rank the files
-        response = call_model(prompt, model=MODEL, api_key=API_KEY, pdf_path=job_description_path)
-        
-        file_score = int(response.strip())
-        candidate_score += file_score
+        # Estimate tokens
+        total_tokens = estimate_tokens(prompt)
+
+        if total_tokens > MAX_TOKENS:
+            continue
+
+        try:
+            response = call_model(
+                prompt,
+                model=MODEL,
+                api_key=API_KEY,
+                pdf_path=job_description_path
+            )
+            file_score = int(response.strip())
+            candidate_score += file_score
+            valid_file_count += 1
+        except Exception as e:
+            print(f"Error scoring file {file_path}: {e}")
+            continue
+
+    return candidate_score / valid_file_count if valid_file_count else 0
+
+
+def candidate_git_score(user_url=None, job_description_path=None):
+    """
+    Ranks files in a GitHub repository based on their relevance to the provided prompt.
+    """
+    if user_url is None:
+        print("No GitHub repository URL provided. Please provide a valid URL.")
+        return
     
-    return candidate_score / len(files) if files else 0
+    if job_description_path is None:
+        print("No job description provided. Please provide a path to a job description file.")
+        return
 
-print("Candidate GitHub Repository Score:", candidate_git_score(REPO_URL, JOBDESCRIPTION_PATH))
+    # Get the top repositories based on the job description
+    top_repos = find_top_repos_by_job_desc(user_url, job_description_path, top_n=2)
+
+    # Calculate scores for each top repository
+    scores = {}
+    for repo in top_repos:
+        score = candidate_git_repo_score(repo, job_description_path)
+        scores[repo] = score
+    
+    return np.mean(scores.values())
+
+print("Candidate GitHub User Score:", candidate_git_score(USER, JOBDESCRIPTION_PATH))
