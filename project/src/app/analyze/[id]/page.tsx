@@ -32,11 +32,6 @@ export default function AnalyzePage() {
                 const jobResponse = await fetch(`http://localhost:5001/job/${id}`);
                 const jobData = await jobResponse.json();
                 setJob(jobData);
-                setLoading(false);
-                // Add 2 second delay before showing content
-                setTimeout(() => {
-                    setShowContent(true);
-                }, 2000);
 
                 // Send POST request with the correct payload format
                 const payload = {
@@ -55,6 +50,10 @@ export default function AnalyzePage() {
                 console.log("Applicants data: ", applicantsData);
                 setApplicants(applicantsData.applicants || []);
                 console.log("Applicants data: ", applicants);
+                
+                // Only set loading to false and show content after both requests are complete
+                setLoading(false);
+                setShowContent(true);
             } catch (error) {
                 console.error('Error fetching data:', error);
                 setLoading(false);
