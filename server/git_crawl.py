@@ -19,7 +19,6 @@ def is_text_file(file_path):
 def crawl_git_repo(url):
     temp_dir = tempfile.mkdtemp()
     result_files = []
-
     try:
         repo_path = os.path.join(temp_dir, "repo")
         git.Repo.clone_from(url, repo_path, depth=1)
@@ -27,8 +26,7 @@ def crawl_git_repo(url):
         for root, dirs, files in os.walk(repo_path):
             for file in files:
                 file_path = os.path.join(root, file)
-                
-                if not is_text_file(file_path):
+                if not is_text_file(file_path) or "/." in file_path:
                     continue
                 
                 with open(file_path, 'r', errors='ignore') as f:

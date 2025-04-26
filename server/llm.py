@@ -36,8 +36,9 @@ def call_model(prompt, model="gpt-4o-mini", api_key=None, pdf_path=None):
             messages=[
                 {"role": "user", "content": prompt}
             ],
-            temperature=0.7,
+            temperature=0,
             max_tokens=500,
+            seed=0
         )
         return response.choices[0].message.content.strip()
     except Exception as e:
