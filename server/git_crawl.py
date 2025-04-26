@@ -53,7 +53,9 @@ def get_user_repos(username):
     return [repo['clone_url'] for repo in repos]
 
 def find_top_repos_by_job_desc(username, job_desc_pdf_path, top_n=3):
-    job_desc_text = extract_text_from_pdf(job_desc_pdf_path)
+    with open(job_desc_pdf_path, 'r', encoding='utf-8') as f:
+        job_desc_text = f.read()
+
     job_desc_tokens = job_desc_text.lower().split()
 
     repo_urls = get_user_repos(username)
