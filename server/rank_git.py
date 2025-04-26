@@ -9,7 +9,10 @@ import json
 
 MODEL = 'gpt-4o-mini'
 API_KEY = load_key()
-USER = input("Enter the GitHub User: ").strip()
+
+
+USER = "flaviogoetzlopez"
+
 JOBDESCRIPTION_PATH = input("Enter the path to the job description PDF file: ").strip()
 dictOfCandidates = {}
 dictOfCandidates[USER] = []
