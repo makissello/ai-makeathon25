@@ -1,0 +1,41 @@
+Student Assistant - Machine Learning & Data Analysis
+Location
+Hamburg, Germany (Hybrid)
+Company
+Novexa Data Solutions (Fictional)
+About Us
+At Novexa Data Solutions, we specialize in building customized software and machine learning tools for small
+and mid-sized businesses. We're a close-knit team that believes great ideas come from fresh perspectives.
+Join us and start making a real impact while you're still studying!
+Position Overview
+We are looking for a motivated Student Assistant to support our data and machine learning team. This is an
+ideal role for first or second-year Bachelor students who are passionate about programming, data, and
+technology, and want to gain hands-on experience early in their studies.
+Your Tasks
+- Support the team with data preparation and small-scale machine learning experiments.
+- Write scripts in Python, primarily using NumPy and other basic libraries.
+- Help maintain and improve internal tools and documentation.
+- Assist in testing and validating ML models under guidance.
+- Participate in weekly stand-ups and team meetings (in English and German).
+Your Profile
+- Current Bachelor student (1st or 2nd year) in Computer Science, Data Science, Engineering, Mathematics,
+or a related field.
+- Comfortable programming in Python.
+- Basic knowledge of NumPy and first exposure to machine learning concepts.
+Student Assistant - Machine Learning & Data Analysis
+- Enthusiasm for learning and problem-solving.
+- Proficiency in English and German (minimum B2 level).
+- Reliable, organized, and willing to ask questions.
+Nice to Have
+- Familiarity with basic machine learning workflows (e.g., training a model, evaluating it).
+- Interest in data visualization or statistics.
+- Any personal coding projects or GitHub repositories.
+What We Offer
+- Flexible working hours (10-15 hours/week) adapted to your university schedule.
+- Hybrid work model: some days at our Hamburg office, some remote.
+- Mentoring and training sessions from experienced engineers.
+- Opportunity to continue as a full-time employee after graduation.
+- Early responsibility and real project involvement.
+How to Apply
+Send your short CV and a few sentences about why you'd like to join us. If you have any project samples or
+GitHub links, feel free to include them!
