@@ -3,29 +3,37 @@ import os
 import tempfile
 import shutil
 
+def is_text_file(file_path):
+    try:
+        with open(file_path, 'rb') as f:
+            chunk = f.read(1024)
+            if b'\0' in chunk:
+                return False  # Found null byte -> likely binary
+    except Exception:
+        return False
+    return True
+
 def crawl_git_repo(url):
-    # Create a temporary directory
     temp_dir = tempfile.mkdtemp()
     result_files = []
 
     try:
-        # Clone the repo (shallow clone with depth=1 for speed)
         repo_path = os.path.join(temp_dir, "repo")
         git.Repo.clone_from(url, repo_path, depth=1)
 
-        # Walk through files and print basic info
         for root, dirs, files in os.walk(repo_path):
             for file in files:
                 file_path = os.path.join(root, file)
+                
+                if not is_text_file(file_path):
+                    continue  # Skip binary files
+                
                 file_content = ''
-                #print(f"Found file: {file_path}")
-                # Example: Read and print the first 5 lines
                 with open(file_path, 'r', errors='ignore') as f:
-                    for i, line in enumerate(f):
-                        file_content += line
+                    file_content = f.read()
+                
                 result_files.append((file_path.replace(temp_dir, ''), file_content))
     finally:
-        # Clean up
         shutil.rmtree(temp_dir)
     
     return result_files
