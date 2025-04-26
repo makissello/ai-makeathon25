@@ -80,8 +80,4 @@ class Applicant:
 
 
 
-# root_directory = "/Users/victorracu/PycharmProjects/ai-makeathon25/Applicant/pseudo_applicants"
-# applicants = Applicant.get_applicants_from_dir(root_directory)
-#
-# for applicant in applicants:
-#     print(applicant.to_string())
+
