@@ -4,7 +4,7 @@ from key import load_key
 import numpy as np
 import tiktoken
 import concurrent.futures
-import json
+import json#
 
 
 MODEL = 'gpt-4o-mini'
