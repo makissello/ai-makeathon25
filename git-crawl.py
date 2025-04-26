@@ -29,5 +29,3 @@ def crawl_git_repo(url):
         shutil.rmtree(temp_dir)
     
     return result_files
-
-print(crawl_git_repo("https://github.com/craciuncg/PVD.git")[0][1])
