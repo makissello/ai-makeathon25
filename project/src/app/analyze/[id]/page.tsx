@@ -20,7 +20,7 @@ export default function AnalyzePage() {
         throw new Error('No pathname provided');
     }
 
-    const id = pathname.split('/').pop(); // Extract job ID from the URL
+    const id = pathname.split('/').pop();
 
     if (!id) throw new Error('No id provided');
 
