@@ -13,7 +13,18 @@ JOBDESCRIPTION_PATH = input("Enter the path to the job description PDF file: ").
 
 MAX_TOKENS = 100000  # adjust based on your model (e.g., 4096 for GPT-3.5, etc.)
 
-
+BASE_PROMPT = (
+    """I am giving you one file, that is part of a Project (a Github Repository)
+    Your task, is to write a text for this file containing the following information.
+    Summary of the File Content. Summary of the Quality of the Code.
+    Short comment on anything worthy of mentioning for this file.
+    THe reason why you have to say this about this file, is that later, i will give you a prompt, with all the summaries of each
+    file that i gave you, and you will have to rate the quality and give a brief Review of the Github Repository.
+    You should give enough information about this file, that it is later possible to understand the whole project.
+    If the file is simple and irrelevant, a very brief remark, like: (Correct HTML file), is enough.
+    Do not structure you answer too formally, just use your own criteria, and make it brief. 
+    """
+)
 
 def estimate_tokens(text, model_name=MODEL):
     enc = tiktoken.encoding_for_model(model_name)
@@ -38,7 +49,6 @@ def process_file(file_path, prompt, job_description_path):
         return None
 
 def candidate_git_repo_score(repo_url=None, job_description_path=None):
-
     """
     Ranks files in a GitHub repository based on their relevance to the provided prompt.
     Ensures the input stays within the max token limit.
@@ -54,46 +64,16 @@ def candidate_git_repo_score(repo_url=None, job_description_path=None):
         return
 
     files = crawl_git_repo(repo_url)
-    candidate_score = 0
-    valid_file_count = 0
+
+
 
     for file_path, content in files:
-        prompt = (
-            """I am giving you one file, that is part of a Project (a Github Repository)
-            Your task, is to write a text for this file containing the following information.
-            Summary of the File Content. Summary of the Quality of the Code.
-            Short comment on anything worthy of mentioning for this file.
-            THe reason why you have to say this about this file, is that later, i will give you a promp, with all the summaries of each
-            file that i gave you, and you will have to rate the quality and give a brief Review of the Github Repository.
-            You should give ennough information about this file, that it is later possible to understand the whole project.
-            If the file is simple and irrelevant, a very brief remark, like: (Correct HTML file), is enough.
-            """
-        )
-        prompt += f"File: {file_path}\nContent:\n{content}\n\n"
-
-        # Estimate tokens
-        total_tokens = estimate_tokens(prompt)
-
-        if total_tokens > MAX_TOKENS:
+        prompt = BASE_PROMPT + f"File: {file_path}\nContent:\n{content}\n\n"
+        if estimate_tokens(prompt) > MAX_TOKENS:
             continue
-
-        try:
-            response = call_model(
-                prompt,
-                model=MODEL,
-                api_key=API_KEY,
-                pdf_path=job_description_path
-            )
-            tmpadd = file_path + response.strip() + "\n\n\n"
-            print(tmpadd)
-            repo_comments += tmpadd
-            valid_file_count += 1
-        except Exception as e:
-            print(f"Error scoring file {file_path}: {e}")
-            continue
-
-
-        process_file(file_path, prompt, job_description_path)
+        resp = process_file(file_path, prompt, job_description_path)
+        if resp is not None:
+            repo_comments += resp
 
 
 
@@ -102,8 +82,7 @@ def candidate_git_repo_score(repo_url=None, job_description_path=None):
     I am trying to decide wether i should hire  the person that created this repository, for the given job description. Are they the right fit?
     Only give as answer an Number between 0 and 10.
     """
-    print(repo_comments)
-
+    # print(repo_comments)
     response = call_model(
                     prompt + repo_comments,
                     model=MODEL,
