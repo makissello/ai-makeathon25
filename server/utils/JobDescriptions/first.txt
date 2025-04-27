@@ -1,0 +1,28 @@
+At TechX Inc., we are looking for a passionate and skilled Frontend Developer to join our
+dynamic team in Berlin. You will be responsible for building user interfaces that are not only
+visually appealing but also functional, responsive, and performant. As a Frontend Developer,
+you will work closely with UX/UI designers, product managers, and backend developers to
+create seamless web applications.
+Key Responsibilities:
+Develop new user-facing features using React and Redux.
+Build reusable components and front-end libraries for future use.
+Ensure the technical feasibility of UI/UX designs.
+Optimize applications for maximum performance across a vast array of web-capable
+devices and browsers.
+Collaborate with backend developers to integrate APIs and enhance overall
+functionality.
+Write clean, scalable, and efficient code.
+Participate in code reviews and team meetings to share knowledge and improve
+development processes.
+Required Skills:
+Proven experience in front-end development using React, HTML5, CSS3, and
+JavaScript.
+Familiarity with version control tools like Git.
+Understanding of RESTful APIs and asynchronous request handling.
+Experience with responsive design and cross-browser compatibility.
+Strong problem-solving skills and attention to detail.
+Excellent communication skills and the ability to work in a team environment.
+Nice to Have:
+Experience with TypeScript and Next.js.
+Knowledge of testing frameworks such as Jest or Mocha.
+Experience with CSS preprocessors like Sass or Less.
