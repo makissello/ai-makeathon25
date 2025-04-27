@@ -1,7 +1,7 @@
 import os#
 from rank_git import candidate_git_score
 import json
-##
+###
 allCandidates = {}
 
 def rankUsersForJob(jobNum = '1'):
