@@ -1,18 +1,12 @@
 import { useState } from 'react';
 import { Applicant } from '../types/applicant';
 import Link from 'next/link';
+import { applicantMap } from '../data/applicantMap';
+import { usePathname } from 'next/navigation';
 
 interface ApplicantCarouselProps {
     applicants?: Applicant[]; // Make applicants optional
 }
-
-const applicantMap = {
-    "Michael Chen": 1,
-    "Jordan Lee": 2,
-    "Samantha Ortiz": 3,
-    "Alexandra Bennett": 4,
-    "Leonard W. Bumblebee": 5,
-};
 
 // Test data
 const TEST_APPLICANTS: Applicant[] = [
@@ -51,6 +45,10 @@ const NavigationArrow = ({ direction, onClick }: { direction: 'left' | 'right', 
 
 export const ApplicantCarousel = ({ applicants = TEST_APPLICANTS }: ApplicantCarouselProps) => {
     const [currentIndex, setCurrentIndex] = useState(0);
+    
+    const pathname = usePathname();
+    const id = pathname.split('/').pop();
+    if (!id) throw new Error('No id provided');
 
     const nextSlide = () => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % applicants.length);
@@ -90,7 +88,7 @@ export const ApplicantCarousel = ({ applicants = TEST_APPLICANTS }: ApplicantCar
                                 <div className="relative">
                                     <Link 
                                         href={{
-                                            pathname: `/applicant/${applicantMap[applicant.applicant_name as keyof typeof applicantMap] || 1}`,
+                                            pathname: `/applicant/${id}`,
                                             query: {
                                                 name: applicant.applicant_name,
                                                 score: applicant.score,

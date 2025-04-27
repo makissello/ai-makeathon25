@@ -3,14 +3,14 @@ import Link from 'next/link';
 interface RepositoryBoxProps {
     name: string;
     description: string;
-    owner: string;
+    url: string;
 }
 
-export const RepositoryBox = ({ name, description, owner }: RepositoryBoxProps) => {
+export const RepositoryBox = ({ name, description, url }: RepositoryBoxProps) => {
     return (
         <div className="group bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-all duration-300 relative">
             <Link 
-                href={`/dashboard/${name}?name=${encodeURIComponent(name)}&description=${encodeURIComponent(description)}&owner=${encodeURIComponent(owner)}`}
+                href={`/dashboard/${name}?description=${encodeURIComponent(description)}&url=${encodeURIComponent(url)}`}
                 className="absolute top-0 right-0 p-2 text-gray-600 hover:text-gray-900 transition-colors duration-200"
             >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

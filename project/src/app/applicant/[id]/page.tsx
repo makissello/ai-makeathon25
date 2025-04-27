@@ -7,9 +7,41 @@ import { DottedBackground } from '../../../components/DottedBackground';
 import { Applicant } from '../../../types/applicant';
 import { RepositoryBox } from '../../../components/RepositoryBox';
 import { ResourceButton } from '../../../components/ResourceButton';
+import { applicantMap } from '../../../data/applicantMap';
+
+interface Repository {
+    Name: string;
+    link_to_repository: string;
+    score_of_repository: number;
+    evaluation_of_repository: string;
+    repo_name: string;
+    score: number;
+    evaluation: string;
+}
+
+interface RepositoryData {
+    name: string;
+    score: number;
+    evaluation: string;
+    url: string;
+}
+
+interface ApplicantData {
+    [key: string]: Repository[];
+}
+
+// Mapping of applicant names to their repository indices
+const applicantRepositoryIndices: { [key: string]: [number, number] } = {
+    'Michael Chen': [0, 1],
+    'Jordan Lee': [2, 3],
+    'Samantha Ortiz': [4, 5],
+    'Alexandra Bennett': [6, 7],
+    'Leonard W. Bumblebee': [8, 9]
+};
 
 export default function ApplicantPage() {
     const [applicant, setApplicant] = useState<Applicant | null>(null);
+    const [repositories, setRepositories] = useState<RepositoryData[]>([]);
     const [loading, setLoading] = useState(true);
     const [showContent, setShowContent] = useState(false);
     const [expandedSections, setExpandedSections] = useState({
@@ -32,17 +64,48 @@ export default function ApplicantPage() {
         const score = searchParams.get('score');
         const description = searchParams.get('description');
 
+        const fetchRepositoryData = async () => {
+            try {
+                const response = await fetch(`http://localhost:5001/repo/${id}`);
+                const data: ApplicantData = await response.json();
+                const applicantName = searchParams.get('name');
+                if (applicantName) {
+                    const repos = data[applicantName];
+                    if (repos) {
+                        setRepositories(repos
+                            .filter((_, index) => {
+                                const applicantName = searchParams.get('name');
+                                if (!applicantName) return false;
+                                const indices = applicantRepositoryIndices[applicantName];
+                                if (!indices) return false;
+                                return indices.includes(index);
+                            })
+                            .map(repo => ({
+                                name: repo.link_to_repository.split('/').pop()?.replace('.git', '') || repo.Name,
+                                score: repo.score_of_repository,
+                                evaluation: repo.evaluation_of_repository,
+                                url: repo.link_to_repository
+                            })));
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching repository data:', error);
+            }
+        };
+
         if (name && score && description) {
             setApplicant({
                 applicant_name: name,
                 score: parseFloat(score),
                 short_description: description
             });
+            fetchRepositoryData();
             setLoading(false);
+            setShowContent(true);    
         } else {
             setLoading(false);
         }
-    }, [searchParams]);
+    }, [searchParams, id]);
 
     const toggleSection = (section: 'github' | 'resources') => {
         setExpandedSections(prev => ({
@@ -74,26 +137,19 @@ export default function ApplicantPage() {
             <div className="min-h-screen">
                 <DottedBackground />
                 
-                <Link 
-                    href="/" 
+                <button 
+                    onClick={() => window.history.back()}
                     className="absolute top-4 left-4 bg-white/80 backdrop-blur-sm p-2 rounded-full shadow-lg hover:bg-white transition-colors duration-200 z-20"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
-                </Link>
+                </button>
                 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                     <div className="mb-8">
                         <h1 className="text-3xl font-bold text-gray-800 font-dm-mono">{applicant.applicant_name}</h1>
-                        <div className="flex items-center gap-2">
-                            <p className="text-sm text-gray-500 font-dm-mono">Score: {applicant.score}</p>
-                            <span className={`w-2 h-2 rounded-full ${
-                                applicant.score >= 8 ? 'bg-green-500' :
-                                applicant.score >= 3 ? 'bg-yellow-500' :
-                                'bg-red-500'
-                            }`}></span>
-                        </div>
+                        <p className="text-sm text-gray-500 font-dm-mono">Score: {applicant.score}</p>
                     </div>
 
                     <section className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm p-8 hover:shadow-md transition-all duration-300 border border-gray-100">
@@ -120,43 +176,16 @@ export default function ApplicantPage() {
                                 {expandedSections.github && (
                                     <div className="p-4 bg-white rounded-lg mt-2">
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <RepositoryBox
-                                                name="react-portfolio"
-                                                description="A modern portfolio website built with React and TypeScript, featuring responsive design and smooth animations. Conduct user research and usability testing to gather feedback and refine designs.
-Collaborate with developers to ensure accurate implementation of designs.
-Ensure design consistency across all product touchpoints, maintaining high-quality design standards.
-Stay up to date with design trends and emerging tools and technologies to continuously improve our products.
-Required Skills:
-
-Proven experience as a Product Designer, UI/UX Designer, or similar role with a portfolio that demonstrates your design skills.
-Proficiency in design tools such as Figma, Sketch, or Adobe XD.
-Strong understanding of interaction design, visual design, and user research.
-Experience in designing for both web and mobile platforms.
-Ability to create prototypes and conduct user testing.
-Excellent communication skills and a collaborative mindset.
-A passion for solving complex design challenges and improving user experiences.
-Nice to Have:
-
-Experience with motion design or animations.
-Familiarity with design systems and component-based design.
-Knowledge of front-end development or experience working closely with developers."
-                                                url="https://github.com/username/react-portfolio"
-                                            />
-                                            <RepositoryBox
-                                                name="ai-chatbot"
-                                                description="An intelligent chatbot implementation using natural language processing and machine learning algorithms."
-                                                url="https://github.com/username/ai-chatbot"
-                                            />
-                                            <RepositoryBox
-                                                name="e-commerce-api"
-                                                description="A RESTful API for an e-commerce platform with user authentication and product management."
-                                                url="https://github.com/username/e-commerce-api"
-                                            />
-                                            <RepositoryBox
-                                                name="data-visualization"
-                                                description="Interactive data visualization dashboard using D3.js and React for real-time data analysis."
-                                                url="https://github.com/username/data-visualization"
-                                            />
+                                            {repositories
+                                                .slice(0, 2) // Only show first 2 projects
+                                                .map((repo, index) => (
+                                                    <RepositoryBox
+                                                        key={index}
+                                                        name={repo.name}
+                                                        description={repo.evaluation}
+                                                        url={repo.url}
+                                                    />
+                                                ))}
                                         </div>
                                     </div>
                                 )}
@@ -176,14 +205,18 @@ Knowledge of front-end development or experience working closely with developers
                                 {expandedSections.resources && (
                                     <div className="p-4 bg-white rounded-lg mt-2">
                                         <div className="space-y-4">
-                                            <ResourceButton
-                                                type="cv"
-                                                url="/path/to/cv.pdf" // TODO: Replace with actual CV path
-                                            />
-                                            <ResourceButton
-                                                type="github"
-                                                url="https://github.com/username" // TODO: Replace with actual GitHub URL
-                                            />
+                                            {applicant && (
+                                                <ResourceButton
+                                                    type="cv"
+                                                    url={`http://localhost:5001/cv/${applicantMap[applicant.applicant_name]}`}
+                                                />
+                                            )}
+                                            {repositories.length > 0 && (
+                                                <ResourceButton
+                                                    type="github"
+                                                    url={`https://github.com/${repositories[0].url.split('/')[3]}`}
+                                                />
+                                            )}
                                         </div>
                                     </div>
                                 )}

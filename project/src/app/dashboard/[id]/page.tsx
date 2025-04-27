@@ -43,17 +43,27 @@ export default function DashboardPage() {
 
     useEffect(() => {
         const description = searchParams.get('description');
+        const url = searchParams.get('url');
         setDescription(description || '');
 
         const fetchRepositoryData = async () => {
             try {
-                const response = await fetch(`https://api.github.com/repos/makissello/scones-ml-workflow`);
+                // Extract owner and repo name from the GitHub URL
+                const urlParts = url?.split('/');
+                const owner = urlParts?.[3];
+                const repo = urlParts?.[4]?.replace('.git', '');
+                
+                if (!owner || !repo) {
+                    throw new Error('Invalid GitHub URL');
+                }
+
+                const response = await fetch(`https://api.github.com/repos/${owner}/${repo}`);
                 const data = await response.json();
                 
-                const languagesResponse = await fetch(`https://api.github.com/repos/makissello/scones-ml-workflow/languages`);
+                const languagesResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/languages`);
                 const languagesData = await languagesResponse.json();
 
-                const tagsResponse = await fetch(`https://api.github.com/repos/makissello/scones-ml-workflow/tags`);
+                const tagsResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/tags`);
                 const tagsData = await tagsResponse.json();
 
                 setRepository({
@@ -68,17 +78,17 @@ export default function DashboardPage() {
                     lastUpdated: new Date(data.updated_at).toLocaleDateString()
                 });
                 setLoading(false);
-                setTimeout(() => {
-                    setShowContent(true);
-                }, 2000);
+                setShowContent(true);
             } catch (error) {
                 console.error('Error fetching repository data:', error);
                 setLoading(false);
             }
         };
 
-        fetchRepositoryData();
-    }, []);
+        if (url) {
+            fetchRepositoryData();
+        }
+    }, [searchParams]);
 
     const toggleSection = (section: 'commits' | 'issues' | 'contributors') => {
         setExpandedSections(prev => ({
@@ -115,14 +125,14 @@ export default function DashboardPage() {
             <div className="min-h-screen">
                 <DottedBackground />
                 
-                <Link 
-                    href="/" 
+                <button 
+                    onClick={() => window.history.back()}
                     className="absolute top-4 left-4 bg-white/80 backdrop-blur-sm p-2 rounded-full shadow-lg hover:bg-white transition-colors duration-200 z-20"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
-                </Link>
+                </button>
                 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                     <div className="mb-8">
