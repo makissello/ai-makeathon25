@@ -9,6 +9,8 @@ from utils.applicant import Applicant
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
+from rank_users import rankUsersForJob
+
 load_dotenv('../project/.env')
 
 CLIENT = OpenAI(api_key=os.getenv('OPENAI-KEY'))
@@ -65,7 +67,7 @@ def get_processed_applicants(job_id):
     for input JSON need path to applicants folder and path to job description PDF
     returns JSON of applicants dictionaries ranked
     """
-    print("data received: ", request.json)
+    
     data = request.json
     folder_path = data.get('path')
     job_desc_path = data.get('job_description')
@@ -77,6 +79,13 @@ def get_processed_applicants(job_id):
     applicants_ranked = rank_users(applicants=applicants_list, job_description=job_desc_path, client=CLIENT)
 
     return jsonify({'applicants': applicants_ranked})
+
+"""
+@app.route('/analyze', methods=['GET'])
+def analyze():
+    jobNum = request.args.get('jobNum')
+    return rankUsersForJob(jobNum)
+"""
 
 if __name__ == "__main__":
     app.run(host="localhost", port=5001, debug=True)

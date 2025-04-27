@@ -11,4 +11,4 @@ def load_key():
         return None
     except Exception as e:
         print(f"An error occurred while loading the key: {e}")
-        return None
+        return None#

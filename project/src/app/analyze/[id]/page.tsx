@@ -47,9 +47,7 @@ export default function AnalyzePage() {
                     body: JSON.stringify(payload)
                 });
                 const applicantsData = await applicantsResponse.json();
-                console.log("Applicants data: ", applicantsData);
                 setApplicants(applicantsData.applicants || []);
-                console.log("Applicants data: ", applicants);
                 
                 // Only set loading to false and show content after both requests are complete
                 setLoading(false);
