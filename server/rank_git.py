@@ -6,17 +6,15 @@ import tiktoken
 import concurrent.futures
 import json
 
-
 MODEL = 'gpt-4o-mini'
 API_KEY = load_key()
 
-
+REPOSITORY_SUMMARIES = """"""
 USER = "flaviogoetzlopez"
-
 dictOfCandidates = {}
 dictOfCandidates[USER] = []
 
-charactersList = []
+charactersList = []  #
 
 MAX_TOKENS = 100000  # adjust based on your model (e.g., 4096 for GPT-3.5, etc.)
 
@@ -33,15 +31,17 @@ BASE_PROMPT = (
     """
 )
 
+
 def estimate_tokens(text, model_name=MODEL):
     enc = tiktoken.encoding_for_model(model_name)
     return len(enc.encode(text))
+
 
 def process_file(file_path, prompt):
     """
     Function to call the model and return the result for one file.
     """
-    try:#
+    try:  #
         response = call_model(
             prompt,
             model=MODEL,
@@ -54,6 +54,7 @@ def process_file(file_path, prompt):
         print(f"Error scoring file {file_path}: {e}")
         return None
 
+
 def candidate_git_repo_score(repo_url=None, job_description_path=None):
     """
     Ranks files in a GitHub repository based on their relevance to the provided prompt.
@@ -64,13 +65,12 @@ def candidate_git_repo_score(repo_url=None, job_description_path=None):
     if repo_url is None:
         print("No GitHub repository URL provided. Please provide a valid URL.")
         return
-    
+
     if job_description_path is None:
         print("No job description provided. Please provide a path to a job description file.")
         return
 
     files = crawl_git_repo(repo_url)
-
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
         futures = []
@@ -85,7 +85,6 @@ def candidate_git_repo_score(repo_url=None, job_description_path=None):
             if resp is not None:
                 repo_comments += resp
 
-
     prompt = """All of the following infos, are the names of Files, and then their brief description, in a Github repository. 
     Your task, is to rate the entire repository, on its own, but especially its relevance to the job description given to you.
     I am trying to decide wether i should hire  the person that created this repository, for the given job description. Are they the right fit?
@@ -98,10 +97,10 @@ def candidate_git_repo_score(repo_url=None, job_description_path=None):
     with open(job_description_path, 'r', encoding='utf-8') as file:
         JOBDESCRIPTION_TEXT = file.read()
         response = call_model(
-                        "The following Text is the Job description, that should be considered: " + JOBDESCRIPTION_TEXT + "The following Text is the Prompt" + prompt + repo_comments,
-                        model=MODEL,
-                        api_key=API_KEY,
-                    )
+            "The following Text is the Job description, that should be considered: " + JOBDESCRIPTION_TEXT + "The following Text is the Prompt" + prompt + repo_comments,
+            model=MODEL,
+            api_key=API_KEY,
+        )
 
     print(response.strip())
 
@@ -110,12 +109,11 @@ def candidate_git_repo_score(repo_url=None, job_description_path=None):
     evaluation_text = lines[1].strip() if len(lines) > 1 else ""
     print("Evaluation number is: ", evaluation_number)
 
-
     charactersList.append({
-            "link_to_repository": repo_url,
-            "score_of_repository": evaluation_number,
-            "evaluation_of_repository": evaluation_text,
-        }
+        "link_to_repository": repo_url,
+        "score_of_repository": evaluation_number,
+        "evaluation_of_repository": evaluation_text,
+    }
     )
     return None
 
@@ -132,19 +130,26 @@ def candidate_git_score(username=None, job_description_path=None):
         return
 
     # Get the top repositories based on the job description
-    if username == "makissello" or username == "flavio":
-        top_repos = find_top_repos_by_job_desc(username, job_description_path, top_n=4)
-        print(top_repos)
+    if username == "makissello" or username == "flaviogoetzlopez":
+        top_repos = find_top_repos_by_job_desc(username, job_description_path, top_n=2)
+    elif username == "simplifieduser":
+        top_repos = ["https://github.com/simplifieduser/upnp",
+                     "https://github.com/simplifieduser/gpt-link"]  # , "https://github.com/simplifieduser/r5-mm", "https://github.com/simplifieduser/vgm-ripper"]
+    elif username == "mauricemauser":
+        top_repos = ["https://github.com/MauriceMauser/moes-tAIvern",
+                     "https://github.com/MauriceMauser/cs184-bitstarter"]  # , "https://github.com/MauriceMauser/deep-learning-bike-sharing-prediction", "https://github.com/MauriceMauser/cnn-cifar10"]
+    elif username == "pinku0304":
+        top_repos = ["https://github.com/pinku0304/git_basics",
+                     "https://github.com/pinku0304/namstereact"]  # , "https://github.com/flaviogoetzlopez/desktop-tutorial", "https://github.com/flaviogoetzlopez/desktop-tutorial"]
     else:
-        top_repos = ["https://github.com/simplifieduser/upnp", "https://github.com/simplifieduser/upnp", "https://github.com/simplifieduser/upnp"]
-
+        top_repos = ["https://github.com/MauriceMauser/moes-tAIvern",
+                     "https://github.com/MauriceMauser/cs184-bitstarter"]
+        # "https://github.com/MauriceMauser/deep-learning-bike-sharing-prediction",
+        # "https://github.com/MauriceMauser/cnn-cifar10"]
     # Calculate scores for each top repository
     for repo in top_repos:
-        print(repo)
+        # print(repo)
         candidate_git_repo_score(repo, job_description_path)
 
     print(top_repos)
     return charactersList
-
-
-

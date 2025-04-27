@@ -1,12 +1,12 @@
-import os
+import os#
 from rank_git import candidate_git_score
 import json
-
+###
 allCandidates = {}
 
 def rankUsersForJob(jobNum = '1'):
     if jobNum == '1':
-        job_description_path = "utils/JobDescriptions/JobDescription.txt"
+        job_description_path = "utils/JobDescriptions/first.txt"
     elif jobNum == '2':
         job_description_path = "utils/JobDescriptions/second.txt"
     elif jobNum == '3':
@@ -25,8 +25,7 @@ def rankUsersForJob(jobNum = '1'):
 
 
 
-    for applicant in usernames:#
-        print(applicant)
+    for applicant in usernames:
         listContents = candidate_git_score(username=applicant, job_description_path=job_description_path)
         allCandidates[applicant] = listContents
 
@@ -34,3 +33,5 @@ def rankUsersForJob(jobNum = '1'):
 
     with open("job" + jobNum + "Candidates.json", "w", encoding='utf-8') as f:
         json.dump(allCandidates, f, ensure_ascii=False)
+
+rankUsersForJob('1')
