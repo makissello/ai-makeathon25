@@ -39,9 +39,6 @@ export default function ApplicantPage() {
                 short_description: description
             });
             setLoading(false);
-            setTimeout(() => {
-                setShowContent(true);
-            }, 2000);
         } else {
             setLoading(false);
         }
@@ -89,7 +86,14 @@ export default function ApplicantPage() {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                     <div className="mb-8">
                         <h1 className="text-3xl font-bold text-gray-800 font-dm-mono">{applicant.applicant_name}</h1>
-                        <p className="text-sm text-gray-500 font-dm-mono">Score: {applicant.score}</p>
+                        <div className="flex items-center gap-2">
+                            <p className="text-sm text-gray-500 font-dm-mono">Score: {applicant.score}</p>
+                            <span className={`w-2 h-2 rounded-full ${
+                                applicant.score >= 8 ? 'bg-green-500' :
+                                applicant.score >= 3 ? 'bg-yellow-500' :
+                                'bg-red-500'
+                            }`}></span>
+                        </div>
                     </div>
 
                     <section className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm p-8 hover:shadow-md transition-all duration-300 border border-gray-100">
