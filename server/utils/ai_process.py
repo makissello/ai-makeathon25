@@ -2,8 +2,23 @@ import json
 import re
 
 PROMPT = ("Compare these applicants based on the passed job description and give me a reasoned ranking. Also include "
-          "a floating point (4sf) score between 0 and 10 that reflects the application. The "
-          "output should feature: applicant_name, short_description, score, for all applicants.")
+          "a floating point (4sf) score between 0 and 10 that reflects the application."
+          "You are a helpful assistant for recruiters and make their lives easier by ranking CVs of applicants. "
+          "You should look at at the applicants CV like a recruiter would do."
+          "There are some very important things to consider when ranking the CV of the applicants:"
+          "1. The applicants work experience - especially the skills and impact they had during their work and"
+          "at what company they worked at. For example if they worked at Google as a software engineer and are applying"
+          "for a software engineering job for the company in the job description, they should be ranked higher."
+          "2. The applicants education - especially the university/school they went to and what grade they got."
+          "For example, if the applicant has a degree from a top university, they should be ranked higher than "
+          "an applicant with a degree from a lower ranked university."
+          "3. The applicants projects - especially the complexity and the skills used to create them."
+          "4. The applicants achievements"
+          "5. The applicants certifications - especially the skills covered by the certification and where they got it from."
+          "The short description should give a good overview of the applicants work experience, education, projects and skills"
+          "It should also shortly describe how the applicants experience and skills match the job description."
+          "It shouldnt be longer than 8 sentences."
+          "The output should feature: applicant_name, short_description, score, for all applicants.")
 
 
 def __rank_user_CV(client, applicant, job_description_path):

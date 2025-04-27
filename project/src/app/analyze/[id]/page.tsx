@@ -20,7 +20,7 @@ export default function AnalyzePage() {
         throw new Error('No pathname provided');
     }
 
-    const id = pathname.split('/').pop(); // Extract job ID from the URL
+    const id = pathname.split('/').pop();
 
     if (!id) throw new Error('No id provided');
 
@@ -48,7 +48,10 @@ export default function AnalyzePage() {
                 });
                 const applicantsData = await applicantsResponse.json();
                 setApplicants(applicantsData.applicants || []);
-                
+
+                // Sort applicants by score
+                const applicantsSorted = applicantsData.applicants.sort((a: Applicant, b: Applicant) => b.score - a.score);
+                setApplicants(applicantsSorted);
                 // Only set loading to false and show content after both requests are complete
                 setLoading(false);
                 setShowContent(true);
