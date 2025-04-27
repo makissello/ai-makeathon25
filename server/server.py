@@ -93,10 +93,12 @@ def get_processed_applicants(job_id):
 
     return jsonify({'applicants': applicants_ranked})
 
+"""
 @app.route('/analyze', methods=['GET'])
 def analyze():
     jobNum = request.args.get('jobNum')
     return rankUsersForJob(jobNum)
+"""
 
 @app.route("/cv/<applicant_id>", methods=["GET"])
 def get_cv(applicant_id):
