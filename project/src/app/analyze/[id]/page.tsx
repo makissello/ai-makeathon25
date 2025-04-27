@@ -25,8 +25,6 @@ export default function AnalyzePage() {
     if (!id) throw new Error('No id provided');
 
     useEffect(() => {
-        console.log("Job ID: ", id);
-
         const fetchData = async () => {
             try {
                 const jobResponse = await fetch(`http://localhost:5001/job/${id}`);

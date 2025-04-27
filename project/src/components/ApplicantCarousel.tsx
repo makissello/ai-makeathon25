@@ -6,6 +6,14 @@ interface ApplicantCarouselProps {
     applicants?: Applicant[]; // Make applicants optional
 }
 
+const applicantMap = {
+    "Michael Chen": 1,
+    "Jordan Lee": 2,
+    "Samantha Ortiz": 3,
+    "Alexandra Bennett": 4,
+    "Leonard W. Bumblebee": 5,
+};
+
 // Test data
 const TEST_APPLICANTS: Applicant[] = [
     {
@@ -82,7 +90,7 @@ export const ApplicantCarousel = ({ applicants = TEST_APPLICANTS }: ApplicantCar
                                 <div className="relative">
                                     <Link 
                                         href={{
-                                            pathname: `/applicant/${index + 1}`,
+                                            pathname: `/applicant/${applicantMap[applicant.applicant_name as keyof typeof applicantMap] || 1}`,
                                             query: {
                                                 name: applicant.applicant_name,
                                                 score: applicant.score,
@@ -102,7 +110,14 @@ export const ApplicantCarousel = ({ applicants = TEST_APPLICANTS }: ApplicantCar
                                     </div>
                                     <div className="text-center">
                                         <h3 className="text-2xl font-semibold text-gray-900 font-dm-mono">{applicant.applicant_name}</h3>
-                                        <p className="text-gray-600 font-dm-mono">Score: {applicant.score}</p>
+                                        <div className="flex items-center justify-center gap-2">
+                                            <p className="text-gray-600 font-dm-mono">Score: {applicant.score}</p>
+                                            <span className={`w-2 h-2 rounded-full ${
+                                                applicant.score >= 8 ? 'bg-green-500' :
+                                                applicant.score >= 3 ? 'bg-yellow-500' :
+                                                'bg-red-500'
+                                            }`}></span>
+                                        </div>
                                     </div>
                                     <div className="w-full">
                                         <h4 className="text-lg font-semibold text-gray-900 mb-4 font-dm-mono">Description</h4>

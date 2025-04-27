@@ -96,7 +96,7 @@ export default function ApplicantPage() {
                         <div className="space-y-4">
                             {/* General Summary Section - Always Visible */}
                             <div>
-                                <h2 className="text-xl font-semibold text-gray-900 font-dm-mono mb-4">General Summary</h2>
+                                <h2 className="text-xl font-semibold text-gray-900 font-dm-mono mb-4">Résume</h2>
                                 <div className="p-4 bg-white rounded-lg">
                                     <p className="text-gray-700 font-dm-mono">{applicant.short_description}</p>
                                 </div>
@@ -108,7 +108,7 @@ export default function ApplicantPage() {
                                     onClick={() => toggleSection('github')}
                                     className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200"
                                 >
-                                    <h2 className="text-xl font-semibold text-gray-900 font-dm-mono">GitHub Summary</h2>
+                                    <h2 className="text-xl font-semibold text-gray-900 font-dm-mono">GitHub Projects</h2>
                                     <svg xmlns="http://www.w3.org/2000/svg" className={`h-6 w-6 text-gray-600 transform transition-transform duration-200 ${expandedSections.github ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                                     </svg>
