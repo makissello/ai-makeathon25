@@ -118,7 +118,24 @@ export default function ApplicantPage() {
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <RepositoryBox
                                                 name="react-portfolio"
-                                                description="A modern portfolio website built with React and TypeScript, featuring responsive design and smooth animations."
+                                                description="A modern portfolio website built with React and TypeScript, featuring responsive design and smooth animations. Conduct user research and usability testing to gather feedback and refine designs.
+Collaborate with developers to ensure accurate implementation of designs.
+Ensure design consistency across all product touchpoints, maintaining high-quality design standards.
+Stay up to date with design trends and emerging tools and technologies to continuously improve our products.
+Required Skills:
+
+Proven experience as a Product Designer, UI/UX Designer, or similar role with a portfolio that demonstrates your design skills.
+Proficiency in design tools such as Figma, Sketch, or Adobe XD.
+Strong understanding of interaction design, visual design, and user research.
+Experience in designing for both web and mobile platforms.
+Ability to create prototypes and conduct user testing.
+Excellent communication skills and a collaborative mindset.
+A passion for solving complex design challenges and improving user experiences.
+Nice to Have:
+
+Experience with motion design or animations.
+Familiarity with design systems and component-based design.
+Knowledge of front-end development or experience working closely with developers."
                                                 url="https://github.com/username/react-portfolio"
                                             />
                                             <RepositoryBox

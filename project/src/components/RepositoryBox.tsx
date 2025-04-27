@@ -8,7 +8,7 @@ interface RepositoryBoxProps {
 
 export const RepositoryBox = ({ name, description, url }: RepositoryBoxProps) => {
     return (
-        <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors duration-200 relative">
+        <div className="group bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-all duration-300 relative">
             <Link 
                 href={url}
                 target="_blank"
@@ -20,7 +20,9 @@ export const RepositoryBox = ({ name, description, url }: RepositoryBoxProps) =>
                 </svg>
             </Link>
             <h3 className="text-lg font-semibold text-gray-900 font-dm-mono mb-2 pr-8">{name}</h3>
-            <p className="text-gray-700 font-dm-mono">{description}</p>
+            <div className="max-h-[100px] group-hover:max-h-[300px] overflow-y-auto transition-all duration-300">
+                <p className="text-gray-700 font-dm-mono">{description}</p>
+            </div>
         </div>
     );
 }; 
