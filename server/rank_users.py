@@ -34,6 +34,3 @@ def rankUsersForJob(jobNum = '1'):
 
     with open("job" + jobNum + "Candidates.json", "w", encoding='utf-8') as f:
         json.dump(allCandidates, f, ensure_ascii=False)
-
-
-rankUsersForJob()
