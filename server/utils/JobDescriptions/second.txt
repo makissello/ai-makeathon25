@@ -1,0 +1,41 @@
+DevTech is searching for a talented Backend Developer to join our growing engineering team
+in Munich. The ideal candidate will have hands-on experience with Node.js and a passion for
+building scalable, high-performance backend systems. As a Backend Developer, you will help
+us create and maintain the core architecture of our applications, working closely with other
+developers and stakeholders to deliver top-notch solutions.
+Key Responsibilities:
+•
+•
+•
+•
+•
+•
+•
+Develop robust, scalable, and secure APIs and services using Node.js.
+Write server-side logic, database queries, and integrate third-party services.
+Optimize applications for performance and scalability.
+Troubleshoot and resolve technical issues across the backend infrastructure.
+Work with frontend developers to integrate user-facing elements with server-side
+logic.
+Collaborate with the team to design and implement new features and improvements.
+Ensure the security of applications and handle sensitive data responsibly.
+Required Skills:
+•
+•
+•
+•
+•
+•
+Strong experience with Node.js, Express.js, and RESTful API design.
+Familiarity with databases like MongoDB, MySQL, or PostgreSQL.
+Experience with authentication and authorization strategies (OAuth, JWT).
+Knowledge of containerization (Docker) and cloud services (AWS, GCP).
+Strong understanding of server-side logic and microservice architecture.
+Experience with version control systems, specifically Git.
+Nice to Have:
+•
+•
+•
+Knowledge of GraphQL and Apollo.
+Experience with testing frameworks such as Mocha or Jest.
+Familiarity with CI/CD pipelines and automated deployment processes.

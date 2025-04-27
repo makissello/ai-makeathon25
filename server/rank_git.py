@@ -11,8 +11,8 @@ MODEL = 'gpt-4o-mini'
 API_KEY = load_key()
 
 
+REPOSITORY_SUMMARIES = """"""
 USER = "flaviogoetzlopez"
-
 dictOfCandidates = {}
 dictOfCandidates[USER] = []
 
@@ -132,19 +132,24 @@ def candidate_git_score(username=None, job_description_path=None):
         return
 
     # Get the top repositories based on the job description
-    if username == "makissello" or username == "flavio":
-        top_repos = find_top_repos_by_job_desc(username, job_description_path, top_n=4)
-        print(top_repos)
+    if username == "makissello" or username == "flaviogoetzlopez":
+        top_repos = find_top_repos_by_job_desc(username, job_description_path, top_n=2)
+    elif username == "simplifieduser":
+        top_repos = ["https://github.com/simplifieduser/upnp", "https://github.com/simplifieduser/gpt-link"]# , "https://github.com/simplifieduser/r5-mm", "https://github.com/simplifieduser/vgm-ripper"]
+    elif username == "mauricemauser":
+        top_repos = ["https://github.com/MauriceMauser/moes-tAIvern", "https://github.com/MauriceMauser/cs184-bitstarter"]# , "https://github.com/MauriceMauser/deep-learning-bike-sharing-prediction", "https://github.com/MauriceMauser/cnn-cifar10"]
+    elif username == "pinku0304":
+        top_repos = ["https://github.com/pinku0304/git_basics", "https://github.com/pinku0304/namstereact"]# , "https://github.com/flaviogoetzlopez/desktop-tutorial", "https://github.com/flaviogoetzlopez/desktop-tutorial"]
     else:
-        top_repos = ["https://github.com/simplifieduser/upnp", "https://github.com/simplifieduser/upnp", "https://github.com/simplifieduser/upnp"]
-
+        top_repos = ["https://github.com/MauriceMauser/moes-tAIvern",
+                     "https://github.com/MauriceMauser/cs184-bitstarter"]
+                     # "https://github.com/MauriceMauser/deep-learning-bike-sharing-prediction",
+                     #"https://github.com/MauriceMauser/cnn-cifar10"]
     # Calculate scores for each top repository
     for repo in top_repos:
-        print(repo)
+        # print(repo)
         candidate_git_repo_score(repo, job_description_path)
 
     print(top_repos)
     return charactersList
-
-
 
