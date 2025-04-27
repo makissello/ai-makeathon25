@@ -25,7 +25,7 @@ def rankUsersForJob(jobNum = '1'):
 
 
 
-    for applicant in usernames:
+    for applicant in usernames:#
         print(applicant)
         listContents = candidate_git_score(username=applicant, job_description_path=job_description_path)
         allCandidates[applicant] = listContents
