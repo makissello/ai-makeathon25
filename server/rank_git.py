@@ -16,7 +16,7 @@ USER = "flaviogoetzlopez"
 dictOfCandidates = {}
 dictOfCandidates[USER] = []
 
-charactersList = []
+charactersList = []#
 
 MAX_TOKENS = 100000  # adjust based on your model (e.g., 4096 for GPT-3.5, etc.)
 
